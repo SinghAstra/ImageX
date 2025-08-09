@@ -50,6 +50,8 @@ export function UploadImageModal({
     } else {
       toast.error(result.message);
     }
+    setImageName("");
+    setSelectedFile(null);
     setIsPending(false);
   };
 
@@ -91,7 +93,7 @@ export function UploadImageModal({
                 autoComplete="off"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className="grid grid-cols-4 items-center gap-4 ">
               <Label htmlFor="imageFile" className="text-right">
                 File
               </Label>

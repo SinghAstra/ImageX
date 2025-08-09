@@ -69,7 +69,54 @@ export async function getImagesInFolder(folderId: string) {
     });
     return images;
   } catch (error) {
-    console.error("Error fetching images:", error);
+    console.log("Error fetching images.");
+    if (error instanceof Error) {
+      console.log("error.stack is ", error.stack);
+      console.log("error.message is ", error.message);
+    }
+    return null;
+  }
+}
+
+export async function searchImages(query: string) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return null;
+  }
+
+  if (!query || query.trim() === "") {
+    return [];
+  }
+
+  try {
+    const images = await db.image.findMany({
+      where: {
+        userId: user.id,
+        name: {
+          contains: query.trim(),
+          mode: "insensitive",
+        },
+      },
+      include: {
+        folder: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return images;
+  } catch (error) {
+    console.log("Error searching images.");
+    if (error instanceof Error) {
+      console.log("error.stack is ", error.stack);
+      console.log("error.message is ", error.message);
+    }
     return null;
   }
 }

@@ -10,11 +10,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { siteConfig } from "@/config/site";
 import { User } from "@prisma/client";
-import { Loader, LogOutIcon, Plus, UploadIcon, UserIcon } from "lucide-react";
+import {
+  Loader,
+  LogOutIcon,
+  Plus,
+  Search,
+  UploadIcon,
+  UserIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useToastContext } from "../providers/toast";
 import { NewFolderModal } from "./new-folder-modal";
+import { SearchModal } from "./search-modal";
 import { UploadImageModal } from "./upload-image-modal";
 
 interface NavbarProps {
@@ -25,6 +33,7 @@ interface NavbarProps {
 export function Navbar({ currentUser, currentFolderId }: NavbarProps) {
   const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
   const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const { setToastMessage } = useToastContext();
 
   const handleUploadImageClick = () => {
@@ -42,7 +51,7 @@ export function Navbar({ currentUser, currentFolderId }: NavbarProps) {
   return (
     <>
       <header className="sticky top-0 z-40 w-full shadow-lg backdrop-blur-lg">
-        <div className="flex items-center justify-between py-3 px-2">
+        <div className="flex items-center justify-between py-3 px-4 sm:px-8">
           <Link href="/dashboard">
             <div className="flex items-center space-x-2 ">
               <Loader className="h-6 w-6 text-primary" />{" "}
@@ -52,6 +61,14 @@ export function Navbar({ currentUser, currentFolderId }: NavbarProps) {
             </div>
           </Link>
           <div className="flex items-center gap-2">
+            <Button
+              variant={"outline"}
+              className="hover:bg-muted/40 transition-all duration-200 font-normal"
+              onClick={() => setIsSearchModalOpen(true)}
+            >
+              <Search className="sm:mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Search</span>
+            </Button>
             {currentFolderId && (
               <Button
                 variant={"outline"}
@@ -114,6 +131,10 @@ export function Navbar({ currentUser, currentFolderId }: NavbarProps) {
           folderId={currentFolderId}
         />
       )}
+      <SearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+      />
     </>
   );
 }
