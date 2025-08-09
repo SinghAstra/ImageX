@@ -188,10 +188,10 @@ export async function logOutUser(callback?: string) {
 
 export async function logInUser(formData: LoginFormData) {
   try {
-    console.log("In logInUser");
+    // console.log("In logInUser");
     const { email, password } = formData;
 
-    console.log("formData is ", formData);
+    // console.log("formData is ", formData);
 
     // 1. Server-side validation using Yup
     await loginSchema.validate({ email, password }, { abortEarly: false });
@@ -204,7 +204,7 @@ export async function logInUser(formData: LoginFormData) {
         message: "Invalid credentials.",
       };
     }
-    console.log("user is ", user);
+    // console.log("user is ", user);
 
     // 3. Compare password
     const passwordMatch = await comparePassword(password, user.passwordHash);
@@ -215,7 +215,7 @@ export async function logInUser(formData: LoginFormData) {
       };
     }
 
-    console.log("passwordMatch is ", passwordMatch);
+    // console.log("passwordMatch is ", passwordMatch);
 
     // 4. Check if email is verified
     if (!user.emailVerified) {
@@ -233,7 +233,7 @@ export async function logInUser(formData: LoginFormData) {
     };
     const accessToken = generateAccessToken(accessTokenPayload);
 
-    console.log("accessToken is ", accessToken);
+    // console.log("accessToken is ", accessToken);
 
     // 7. Set tokens as HTTP-only cookies using the Server Action helper
     const accessExpires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
@@ -245,10 +245,10 @@ export async function logInUser(formData: LoginFormData) {
       expires: accessExpires,
     });
 
-    console.log(
-      "cookieStore.get(ACCESS_TOKEN_COOKIE_NAME) is ",
-      cookieStore.get(ACCESS_TOKEN_COOKIE_NAME)
-    );
+    // console.log(
+    //   "cookieStore.get(ACCESS_TOKEN_COOKIE_NAME) is ",
+    //   cookieStore.get(ACCESS_TOKEN_COOKIE_NAME)
+    // );
 
     return {
       success: true,
@@ -275,28 +275,28 @@ export async function logInUser(formData: LoginFormData) {
 
 export async function getCurrentUser() {
   const cookieStore = await cookies();
-  console.log("In getCurrentUser");
-  console.log(
-    "cookieStore.get(ACCESS_TOKEN_COOKIE_NAME) is ",
-    cookieStore.get(ACCESS_TOKEN_COOKIE_NAME)
-  );
+  // console.log("In getCurrentUser");
+  // console.log(
+  //   "cookieStore.get(ACCESS_TOKEN_COOKIE_NAME) is ",
+  //   cookieStore.get(ACCESS_TOKEN_COOKIE_NAME)
+  // );
   const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
 
-  console.log("accessToken is ", accessToken);
+  // console.log("accessToken is ", accessToken);
   if (!accessToken) {
-    console.log("AccessToken Not Found.");
+    // console.log("AccessToken Not Found.");
     return null;
   }
 
   const payload = verifyAccessToken(accessToken);
-  console.log("payload is ", payload);
+  // console.log("payload is ", payload);
 
   if (!payload) {
-    console.log("Payload Not Found.");
+    // console.log("Payload Not Found.");
     return null;
   }
 
-  console.log("payload is ", payload);
+  // console.log("payload is ", payload);
 
   const user = await db.user.findUnique({
     where: {
@@ -305,7 +305,7 @@ export async function getCurrentUser() {
   });
 
   if (!user) {
-    console.log("User Not Found.");
+    // console.log("User Not Found.");
     return null;
   }
   return user;

@@ -7,7 +7,7 @@ import { getCurrentUser } from "./auth";
 export async function createFolder(name: string, parentId: string | null) {
   const user = await getCurrentUser();
 
-  console.log("user is ", user);
+  // console.log("user is ", user);
 
   if (!user) {
     return { success: false, message: "Unauthorized. Please log in." };
@@ -18,7 +18,7 @@ export async function createFolder(name: string, parentId: string | null) {
   }
 
   try {
-    const newFolder = await db.folder.create({
+    await db.folder.create({
       data: {
         name: name.trim(),
         userId: user.id,
@@ -26,7 +26,7 @@ export async function createFolder(name: string, parentId: string | null) {
       },
     });
 
-    console.log("newFolder is ", newFolder);
+    // console.log("newFolder is ", newFolder);
 
     revalidatePath(parentId ? `/dashboard/${parentId}` : "/dashboard");
 
@@ -47,7 +47,7 @@ export async function createFolder(name: string, parentId: string | null) {
 export async function getFolders(parentId: string | null) {
   const user = await getCurrentUser();
 
-  console.log("user is ", user);
+  // console.log("user is ", user);
 
   if (!user) {
     return null;
@@ -64,7 +64,7 @@ export async function getFolders(parentId: string | null) {
       },
     });
 
-    console.log("folders is ", folders);
+    // console.log("folders is ", folders);
 
     return folders;
   } catch (error) {
@@ -78,9 +78,10 @@ export async function getFolders(parentId: string | null) {
 }
 
 export async function getFolderPath(folderId: string) {
+  console.log("getFolderPath is called");
   const user = await getCurrentUser();
 
-  console.log("user is ", user);
+  // console.log("user is ", user);
 
   if (!user) {
     return null;
@@ -91,6 +92,7 @@ export async function getFolderPath(folderId: string) {
     const path: { id: string; name: string }[] = [];
 
     while (currentFolderId) {
+      console.log("currentFolderId is ", currentFolderId);
       const folder = await db.folder.findUnique({
         where: { id: currentFolderId!, userId: user.id },
       });
@@ -103,10 +105,12 @@ export async function getFolderPath(folderId: string) {
 
       path.unshift({ id: folder.id, name: folder.name });
       if (folder.parentId === null) {
-        return;
+        break;
       }
       currentFolderId = folder.parentId;
     }
+
+    console.log("path is ", path);
 
     return path;
   } catch (error) {

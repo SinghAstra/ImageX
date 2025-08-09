@@ -4,19 +4,23 @@ import { Navbar } from "@/components/dashboard/navbar";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
-interface DashboardLayoutProps {
+interface FolderLayoutProps {
   children: ReactNode;
-  params: { folderId?: string };
+  params: Promise<{ folderId?: string }>;
 }
 
-const DashboardLayout = async ({ children, params }: DashboardLayoutProps) => {
+const FolderLayout = async ({ children, params }: FolderLayoutProps) => {
   const currentUser = await getCurrentUser();
-  const folderId = params.folderId || null;
+  const { folderId } = await params;
 
   console.log("folderId is ", folderId);
 
   if (!currentUser) {
     redirect("/login");
+  }
+
+  if (!folderId) {
+    redirect("/dashboard");
   }
 
   return (
@@ -28,4 +32,4 @@ const DashboardLayout = async ({ children, params }: DashboardLayoutProps) => {
   );
 };
 
-export default DashboardLayout;
+export default FolderLayout;

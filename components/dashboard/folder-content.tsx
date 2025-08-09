@@ -22,15 +22,10 @@ export function FolderContent({
   currentFolderId,
 }: DashboardContentProps) {
   const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
-
-  const handleNewFolderClick = () => {
-    setIsNewFolderModalOpen(true);
-  };
-
   const hasContent = folders.length > 0; // Add images.length > 0 later
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+    <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:px-8 md:py-4">
       {hasContent ? (
         <FolderList folders={folders} />
       ) : (
@@ -38,8 +33,12 @@ export function FolderContent({
           <p className="text-muted-foreground mb-4">
             No folders or images found in this location.
           </p>
-          <Button onClick={handleNewFolderClick}>
-            <Plus className="mr-2 h-4 w-4" /> Create First Folder
+          <Button
+            variant={"outline"}
+            className="hover:bg-muted/40 transition-all duration-200 font-normal"
+            onClick={() => setIsNewFolderModalOpen(true)}
+          >
+            <Plus className="mr-2 h-4 w-4" /> New Folder
           </Button>
         </div>
       )}

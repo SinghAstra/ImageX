@@ -1,42 +1,23 @@
-"use client";
-
 import { getFolderPath } from "@/actions/folder";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
-interface BreadcrumbItem {
-  id: string;
-  name: string;
-}
 
 interface BreadcrumbsProps {
-  currentFolderId: string | null;
+  currentFolderId: string;
 }
 
-export function Breadcrumbs({ currentFolderId }: BreadcrumbsProps) {
-  const [path, setPath] = useState<BreadcrumbItem[]>([]);
+export async function Breadcrumbs({ currentFolderId }: BreadcrumbsProps) {
+  console.log("In BreadCrumb");
+  console.log("currentFolderId is ", currentFolderId);
 
-  useEffect(() => {
-    async function fetchPath() {
-      if (currentFolderId) {
-        const folderPath = await getFolderPath(currentFolderId);
-        if (folderPath) {
-          setPath(folderPath);
-        }
-      } else {
-        setPath([]);
-      }
-    }
-    fetchPath();
-  }, [currentFolderId]);
+  const path = await getFolderPath(currentFolderId);
 
-  if (path.length === 0) {
+  if (!path) {
     return;
   }
 
   return (
-    <nav className="flex items-center space-x-1 text-sm text-muted-foreground px-4 sm:px-8 py-2">
+    <nav className="flex items-center space-x-1 text-sm text-muted-foreground px-4 sm:px-8 py-2 ">
       <Link
         href="/dashboard"
         className="flex items-center hover:text-foreground"
@@ -44,8 +25,11 @@ export function Breadcrumbs({ currentFolderId }: BreadcrumbsProps) {
         Home
       </Link>
       {path.map((item) => (
-        <span key={item.id} className="flex items-center">
-          <ChevronRight className="h-4 w-4 mx-1" />
+        <span
+          key={item.id}
+          className="flex items-center hover:underline transition-all duration-200"
+        >
+          <ChevronRight className="h-4 w-4 mx-1 text-primary" />
           <Link
             href={`/dashboard/${item.id}`}
             className="hover:text-foreground"
