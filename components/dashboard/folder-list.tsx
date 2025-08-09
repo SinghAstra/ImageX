@@ -14,13 +14,7 @@ interface FolderListProps {
 
 export function FolderList({ folders }: FolderListProps) {
   if (!folders || folders.length === 0) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <p className="text-muted-foreground">
-          No folders found in this location.
-        </p>
-      </div>
-    );
+    return ;
   }
 
   return (
