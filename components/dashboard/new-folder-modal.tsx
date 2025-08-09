@@ -1,6 +1,6 @@
 "use client";
 
-import { createFolder } from "@/actions/folder"; // Import the server action
+import { createFolder } from "@/actions/folder";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,8 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type React from "react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
+import { useToastContext } from "../providers/toast";
 
 interface NewFolderModalProps {
   isOpen: boolean;
@@ -29,30 +29,15 @@ export function NewFolderModal({
 }: NewFolderModalProps) {
   const [folderName, setFolderName] = useState("");
   const [isPending, setIsPending] = useState(false);
-  const [response, setResponse] = useState<{
-    success: boolean;
-    message: string;
-  } | null>(null);
-
-  useEffect(() => {
-    if (response?.success) {
-      toast.success(response.message);
-      setFolderName(""); // Clear input on success
-      setResponse(null); // Reset response state
-      onClose(); // Close modal
-    } else if (response?.success === false) {
-      toast.error(response.message);
-    }
-  }, [response, onClose]);
+  const { setToastMessage } = useToastContext();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsPending(true);
-    setResponse(null); // Clear previous response
-
     const result = await createFolder(folderName, parentId || null);
-    setResponse(result);
-    setIsPending(false);
+    setToastMessage(result.message);
+    setFolderName("");
+    onClose();
   };
 
   return (
@@ -78,6 +63,7 @@ export function NewFolderModal({
                 className="col-span-3"
                 required
                 disabled={isPending}
+                autoComplete="off"
               />
             </div>
           </div>

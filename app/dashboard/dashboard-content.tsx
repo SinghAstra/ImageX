@@ -2,37 +2,23 @@
 
 import { Breadcrumbs } from "@/components/dashboard/breadcrumbs";
 import { FolderList } from "@/components/dashboard/folder-list";
-import { NewFolderModal } from "@/components/dashboard/new-folder-modal";
-import { Button } from "@/components/ui/button";
-import { Folder } from "@prisma/client";
-import { Plus } from "lucide-react";
-import { useState } from "react";
+import { Navbar } from "@/components/dashboard/navbar";
+import { Folder, User } from "@prisma/client";
 
 export function DashboardContent({
+  currentUser,
   folders,
   currentFolderId,
 }: {
+  currentUser: User;
   folders: Folder[];
   currentFolderId: string | null;
 }) {
-  const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
-
   return (
-    <>
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold md:text-3xl">My Files</h1>
-        <Button onClick={() => setIsNewFolderModalOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> New Folder
-        </Button>
-      </div>
+    <div className="min-h-screen flex flex-col gap-4 ">
+      <Navbar currentUser={currentUser} currentFolderId={currentFolderId} />
       <Breadcrumbs currentFolderId={currentFolderId} />
       <FolderList folders={folders} currentPath="/dashboard" />
-
-      <NewFolderModal
-        isOpen={isNewFolderModalOpen}
-        onClose={() => setIsNewFolderModalOpen(false)}
-        parentId={currentFolderId}
-      />
-    </>
+    </div>
   );
 }
