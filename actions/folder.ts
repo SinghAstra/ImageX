@@ -28,9 +28,6 @@ export async function createFolder(name: string, parentId: string | null) {
 
     console.log("newFolder is ", newFolder);
 
-    // Revalidate the path to refresh the folder list
-    // If parentId is null, revalidate the root dashboard.
-    // Otherwise, revalidate the specific folder path.
     revalidatePath(parentId ? `/dashboard/${parentId}` : "/dashboard");
 
     return { success: true, message: "Folder created successfully!" };

@@ -36,6 +36,7 @@ export function NewFolderModal({
     setIsPending(true);
     const result = await createFolder(folderName, parentId || null);
     setToastMessage(result.message);
+    setIsPending(false);
     setFolderName("");
     onClose();
   };
