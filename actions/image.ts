@@ -2,16 +2,9 @@
 
 import { getCurrentUser } from "@/actions/auth";
 import { db } from "@/lib/db";
-import { put } from "@vercel/blob"; // Import Vercel Blob put function
+import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 
-/**
- * Uploads an image file to Vercel Blob storage and records its metadata in the database.
- * @param name The name of the image.
- * @param file The image file to upload.
- * @param folderId The ID of the folder where the image belongs.
- * @returns A success/error message.
- */
 export async function uploadImage(name: string, file: File, folderId: string) {
   const user = await getCurrentUser();
 
@@ -28,27 +21,28 @@ export async function uploadImage(name: string, file: File, folderId: string) {
   }
 
   try {
-    // 1. Upload the file to Vercel Blob
     const blob = await put(file.name, file, {
-      access: "public", // Make the blob publicly accessible
+      access: "public",
     });
 
-    // 2. Create the image record in the database
     await db.image.create({
       data: {
         name: name.trim(),
-        url: blob.url, // Store the URL returned by Vercel Blob
+        url: blob.url,
         folderId: folderId,
         userId: user.id,
       },
     });
 
-    // Revalidate the path to refresh the image list in the current folder
     revalidatePath(`/dashboard/${folderId}`);
 
     return { success: true, message: "Image uploaded successfully!" };
   } catch (error) {
-    console.error("Error uploading image:", error);
+    console.log("Error uploading image.");
+    if (error instanceof Error) {
+      console.log("error.stack is ", error.stack);
+      console.log("error.message is ", error.message);
+    }
     return {
       success: false,
       message: "Failed to upload image. Please try again.",
@@ -56,11 +50,6 @@ export async function uploadImage(name: string, file: File, folderId: string) {
   }
 }
 
-/**
- * Fetches images within a specific folder for the current user.
- * @param folderId The ID of the folder to fetch images from.
- * @returns An array of image objects, or null if unauthorized/error.
- */
 export async function getImagesInFolder(folderId: string) {
   const user = await getCurrentUser();
 
@@ -75,7 +64,7 @@ export async function getImagesInFolder(folderId: string) {
         folderId: folderId,
       },
       orderBy: {
-        createdAt: "desc", // Order images by creation date
+        createdAt: "desc",
       },
     });
     return images;

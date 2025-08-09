@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface UploadImageModalProps {
@@ -31,16 +31,6 @@ export function UploadImageModal({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isPending, setIsPending] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setImageName("");
-      setSelectedFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    }
-  }, [isOpen]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -66,7 +56,9 @@ export function UploadImageModal({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
-      setImageName(event.target.files[0].name.split(".")[0]);
+      if (imageName === "") {
+        setImageName(event.target.files[0].name.split(".")[0]);
+      }
     } else {
       setSelectedFile(null);
       setImageName("");
@@ -96,6 +88,7 @@ export function UploadImageModal({
                 className="col-span-3"
                 required
                 disabled={isPending}
+                autoComplete="off"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -109,7 +102,7 @@ export function UploadImageModal({
                 accept="image/*"
                 onChange={handleFileChange}
                 ref={fileInputRef}
-                className="col-span-3"
+                className="col-span-3 cursor-pointer"
                 required
                 disabled={isPending}
               />
