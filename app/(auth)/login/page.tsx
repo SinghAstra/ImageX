@@ -49,7 +49,7 @@ function LoginPage() {
       const result = await logInUser(formData);
 
       if (result.success) {
-        router.push("/home");
+        router.push("/dashboard");
         setToastMessage(result.message);
       } else {
         setToastMessage(result.message);
