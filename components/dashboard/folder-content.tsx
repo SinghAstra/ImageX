@@ -4,7 +4,7 @@ import { FolderList } from "@/components/dashboard/folder-list";
 import { NewFolderModal } from "@/components/dashboard/new-folder-modal";
 import { Button } from "@/components/ui/button";
 import { Image } from "@prisma/client";
-import { Plus } from "lucide-react";
+import { Plus, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import { useToastContext } from "../providers/toast";
 import { ImageList } from "./image-list";
@@ -51,21 +51,24 @@ export function FolderContent({
           <p className="text-muted-foreground mb-4">
             No folders or images found in this location.
           </p>
-          <Button
-            variant={"outline"}
-            className="hover:bg-muted/40 transition-all duration-200 font-normal"
-            onClick={() => setIsNewFolderModalOpen(true)}
-          >
-            <Plus className="mr-2 h-4 w-4" /> New Folder
-          </Button>
-          {currentFolderId && (
+          <div className="flex flex-col gap-2 w-fit">
             <Button
-              className="hover:bg-muted/40 transition-all duration-200 font-normal"
-              onClick={handleUploadImageClick}
+              variant={"outline"}
+              className="hover:bg-muted/40 transition-all duration-200 font-normal w-full"
+              onClick={() => setIsNewFolderModalOpen(true)}
             >
-              <Plus className="mr-2 h-4 w-4" /> Upload Image
+              <Plus className="mr-2 h-4 w-4" /> New Folder
             </Button>
-          )}
+            {currentFolderId && (
+              <Button
+                variant={"outline"}
+                className="hover:bg-muted/40 transition-all duration-200 font-normal w-full"
+                onClick={handleUploadImageClick}
+              >
+                <UploadIcon className="mr-2 h-4 w-4" /> Upload Image
+              </Button>
+            )}
+          </div>
         </div>
       )}
 
