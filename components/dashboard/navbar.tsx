@@ -31,7 +31,7 @@ export function Navbar({ currentUser, currentFolderId }: NavbarProps) {
     <>
       <header className="sticky top-0 z-40 w-full shadow-lg backdrop-blur-lg">
         <div className="container mx-auto flex items-center justify-between py-3 px-2">
-          <Link href="/home">
+          <Link href="/dashboard">
             <div className="flex items-center space-x-2 ">
               <Loader className="h-6 w-6 text-primary" />{" "}
               <span className="text-lg font-semibold text-foreground">

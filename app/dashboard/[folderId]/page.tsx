@@ -1,16 +1,13 @@
 import { getFolders } from "@/actions/folder";
-import { DashboardContent } from "./dashboard-content";
+import { FolderContent } from "@/components/dashboard/folder-content";
 
 export default async function DashboardFolderPage({
   params,
 }: {
-  params: Promise<{ folderId: string }>;
+  params: { folderId: string };
 }) {
-  const { folderId } = await params;
-  console.log("folderId is ", folderId);
+  const { folderId } = params;
   const folders = await getFolders(folderId);
 
-  return (
-    <DashboardContent folders={folders || []} currentFolderId={folderId} />
-  );
+  return <FolderContent folders={folders || []} currentFolderId={folderId} />;
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FolderIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -11,10 +10,9 @@ interface Folder {
 
 interface FolderListProps {
   folders: Folder[];
-  currentPath: string;
 }
 
-export function FolderList({ folders, currentPath }: FolderListProps) {
+export function FolderList({ folders }: FolderListProps) {
   if (!folders || folders.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -28,7 +26,7 @@ export function FolderList({ folders, currentPath }: FolderListProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 sm:px-8">
       {folders.map((folder) => (
-        <Link key={folder.id} href={`${currentPath}/${folder.id}`}>
+        <Link key={folder.id} href={`dashboard/${folder.id}`}>
           <div className="hover:shadow-lg transition-shadow hover:bg-muted/40 rounded flex flex-row items-center border px-4 py-2">
             <p className="text-sm font-medium w-full">{folder.name}</p>
             <FolderIcon className="h-4 w-4 text-muted-foreground" />

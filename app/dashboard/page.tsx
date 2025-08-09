@@ -1,21 +1,8 @@
-import { getCurrentUser } from "@/actions/auth";
 import { getFolders } from "@/actions/folder";
-import { redirect } from "next/navigation";
-import { DashboardContent } from "./dashboard-content";
+import { FolderContent } from "@/components/dashboard/folder-content";
 
-export default async function DashboardRootPage() {
-  const currentUser = await getCurrentUser();
-
-  if (!currentUser) {
-    redirect("/login");
-  }
+export default async function DashboardPage() {
   const folders = await getFolders(null);
 
-  return (
-    <DashboardContent
-      currentUser={currentUser}
-      folders={folders || []}
-      currentFolderId={null}
-    />
-  );
+  return <FolderContent folders={folders || []} currentFolderId={null} />;
 }
