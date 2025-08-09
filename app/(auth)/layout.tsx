@@ -9,7 +9,7 @@ interface AuthLayoutProps {
 const AuthLayout = async ({ children }: AuthLayoutProps) => {
   const user = await getCurrentUser();
   if (user) {
-    redirect("/home");
+    redirect("/dashboard");
   }
 
   return children;

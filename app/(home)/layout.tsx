@@ -9,7 +9,7 @@ interface HomeLayoutProps {
 const HomeLayout = async ({ children }: HomeLayoutProps) => {
   const user = await getCurrentUser();
   if (user) {
-    redirect("/home");
+    redirect("/dashboard");
   }
 
   return children;
