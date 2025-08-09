@@ -10,10 +10,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { siteConfig } from "@/config/site";
 import { User } from "@prisma/client";
-import { Loader, LogOutIcon, Plus, UserIcon } from "lucide-react";
+import { Loader, LogOutIcon, Plus, UploadIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useToastContext } from "../providers/toast";
 import { NewFolderModal } from "./new-folder-modal";
+import { UploadImageModal } from "./upload-image-modal";
 
 interface NavbarProps {
   currentUser: User;
@@ -22,6 +24,16 @@ interface NavbarProps {
 
 export function Navbar({ currentUser, currentFolderId }: NavbarProps) {
   const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
+  const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
+  const { setToastMessage } = useToastContext();
+
+  const handleUploadImageClick = () => {
+    if (currentFolderId) {
+      setIsUploadImageModalOpen(true);
+    } else {
+      setToastMessage("Please navigate into a folder to upload images.");
+    }
+  };
 
   const handleLogout = async () => {
     await logOutUser("/");
@@ -30,7 +42,7 @@ export function Navbar({ currentUser, currentFolderId }: NavbarProps) {
   return (
     <>
       <header className="sticky top-0 z-40 w-full shadow-lg backdrop-blur-lg">
-        <div className="container mx-auto flex items-center justify-between py-3 px-2">
+        <div className="flex items-center justify-between py-3 px-2">
           <Link href="/dashboard">
             <div className="flex items-center space-x-2 ">
               <Loader className="h-6 w-6 text-primary" />{" "}
@@ -40,12 +52,23 @@ export function Navbar({ currentUser, currentFolderId }: NavbarProps) {
             </div>
           </Link>
           <div className="flex items-center gap-2">
+            {currentFolderId && (
+              <Button
+                variant={"outline"}
+                className="hover:bg-muted/40 transition-all duration-200 font-normal"
+                onClick={handleUploadImageClick}
+              >
+                <UploadIcon className="sm:mr-2 h-4 w-4" />
+                <span className="hidden sm:inline">Upload Image</span>
+              </Button>
+            )}
             <Button
               variant={"outline"}
               className="hover:bg-muted/40 transition-all duration-200 font-normal"
               onClick={() => setIsNewFolderModalOpen(true)}
             >
-              <Plus className="mr-2 h-4 w-4" /> New Folder
+              <Plus className="sm:mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">New Folder</span>
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -84,6 +107,13 @@ export function Navbar({ currentUser, currentFolderId }: NavbarProps) {
         onClose={() => setIsNewFolderModalOpen(false)}
         parentId={currentFolderId}
       />
+      {currentFolderId && (
+        <UploadImageModal
+          isOpen={isUploadImageModalOpen}
+          onClose={() => setIsUploadImageModalOpen(false)}
+          folderId={currentFolderId}
+        />
+      )}
     </>
   );
 }
