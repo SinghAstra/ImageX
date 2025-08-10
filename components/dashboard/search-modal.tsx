@@ -38,7 +38,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
-    // Reset state when modal opens/closes
     if (!isOpen) {
       setQuery("");
       setResults([]);
@@ -74,7 +73,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   };
 
   const handleResultClick = () => {
-    onClose(); // Close modal when user clicks on a result
+    onClose();
   };
 
   return (
@@ -121,29 +120,18 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   href={`/dashboard/${image.folder.id}`}
                   onClick={handleResultClick}
                 >
-                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium truncate">
-                        {image.name}
-                      </CardTitle>
-                      <FileIcon className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="relative w-full h-24 bg-muted rounded-md overflow-hidden mb-2">
-                        <Image
-                          src={image.url || "/placeholder.svg"}
-                          alt={image.name}
-                          layout="fill"
-                          objectFit="cover"
-                          className="transition-transform duration-200 hover:scale-105"
-                        />
-                      </div>
-                      <div className="flex items-center text-xs text-muted-foreground">
-                        <FolderIcon className="h-3 w-3 mr-1" />
-                        <span className="truncate">{image.folder.name}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <div className="hover:shadow-lg w-full h-32 transition-shadow cursor-pointer relative">
+                    <Image
+                      src={image.url || "/placeholder.svg"}
+                      alt={image.name}
+                      layout="fill"
+                      objectFit="cover"
+                      className="transition-transform duration-200 hover:scale-105"
+                    />
+                    <div className="absolute bottom-0 inset-x-0 bg-muted/40 px-2 py-1">
+                      <p>{image.name}</p>
+                    </div>
+                  </div>
                 </Link>
               ))}
             </div>
